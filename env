@@ -1,0 +1,5 @@
+MYSQL_ROOT_PASSWORD=p@tchApp
+MYSQL_DATABASE=ppp
+MYSQL_PORT=3306
+DATA_DIR=/data/mysql/ppp
+TZ=America/New_York

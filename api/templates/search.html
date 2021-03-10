@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+function load_sample() {
+  $('#key_text').val("1002507170\n1002658094\n1002848124\n1002848661\n1002852791\n1002861071\n543584523\n543615199\n543679473\n543684107\n543692985");
+}
+
+function run_search() {
+  array = {"key_type": 'body',
+           "key_text": $('#key_text').val()};
+  $.ajax({
+      url: '/run_search',
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(array),
+      contentType:'application/json',
+      success: function(result) {
+        $("#search_content").html(result['data']);
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        if (xhr.status == 401) {
+          alert("You are not authenticated");
+        }
+        else {
+          alert(xhr.status + ': ' + thrownError + "\n" + xhr.responseText);
+        }
+      }
+  });
+}
+</script>
+{% endblock %}
+
+{% block content %}
+  {{navbar|safe}}
+  <h2>Search</h2>
+  <br>
+  <div>
+  <label for="key_text">Body ID(s): </label>
+  <textarea style="vertical-align: top" id='key_text' rows="4" cols="20"></textarea>
+  <br>
+  Enter one or more body IDs separated by spaces and/or carriage returns.<br>
+  <a style="font-style: italic" href="#" onclick="load_sample();">Enter sample data</a>
+  </div>
+  <br>
+  <button id="sb" type="button" class="btn btn-success btn-sm" onclick='run_search();'>Search</button>
+  <div style="width: 100%;text-align: center;"><div style="display: inline-block;margin: 0 auto;" id='search_content'></div></div>
+{% endblock %}
