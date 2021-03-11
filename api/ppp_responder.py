@@ -65,7 +65,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
@@ -315,12 +315,12 @@ def run_search():
         result['data'] = '''
         <table id="bodies" class="tablesorter standard">
         <thead>
-        <tr><th>Body ID</th><th>Neuron</th><th>PDF</th><th>Spreadsheet</th></tr>
+        <tr><th class="sorter-digit">Body ID</th><th>Neuron</th><th>PDF</th><th>Spreadsheet</th></tr>
         </thead>
         <tbody>
         '''
         template = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'
-        for body in sorted(good_body):
+        for body, undef in sorted(good_body.items(), key=lambda item: int(item[0])):
             result['data'] += template % (body, good_body[body]['neuron'],
                                           dlink(body, 'pdf'), dlink(body, 'spreadsheet'))
         result['data'] += '</tbody></table>'
@@ -372,7 +372,7 @@ def pingdb():
     try:
         g.db.ping()
     except Exception as err:
-        raise InvalidUsage(sql_error(err))
+        raise InvalidUsage(err)
     return generate_response(result)
 
 
