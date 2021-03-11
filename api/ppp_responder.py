@@ -313,7 +313,7 @@ def run_search():
             good_body[body] = BODIES[body]
     if good_body:
         result['data'] = '''
-        <table id="bodies" class="standard">
+        <table id="bodies" class="tablesorter standard">
         <thead>
         <tr><th>Body ID</th><th>Neuron</th><th>PDF</th><th>Spreadsheet</th></tr>
         </thead>

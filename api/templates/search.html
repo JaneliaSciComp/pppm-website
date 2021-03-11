@@ -17,6 +17,7 @@ function run_search() {
       contentType:'application/json',
       success: function(result) {
         $("#search_content").html(result['data']);
+        $("#bodies").tablesorter({theme: 'blackice'});
       },
       error: function (xhr, ajaxOptions, thrownError) {
         if (xhr.status == 401) {
