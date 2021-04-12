@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+</script>
+{% endblock %}
+
+{% block content %}
+  {{navbar|safe}}
+  <h2>Instructions</h2>
+  <br>
+  <div>
+  <h4>Summary</h4>
+  This application allows the user to search the catalog of body IDs and return match information in two forms:
+  <ul>
+    <li>PDF files containing match imagery, ranks, and scores</li>
+    <li>Excel spreadsheets containing stock name, slide code, and rank</li>
+  </ul>
+  <h4>Downloading files</h4>
+  After a search, a table will show body ID and neuron name, and provide links to the PDF file and spreadsheet. To download a PDF file or spreadsheet, just click on the link.
+  <br>
+  If you're using Chrome and want to download files in batch, we recommend <a href="https://chrome.google.com/webstore/detail/batch-link-downloader/aiahkbnnpafepcgnhhecilboebmmolnn?hl=en-US" target="_blank">Batch Link Downloader</a>. Once you have it installed, any time you're on a page with links, you can set up for batch download by clicking on the Batch Link Download icon in your Chrome menu <img src="static/images/bld.png" alt="Batch Licn Download icon" style="width:25px;height:25px;">. You'll see a pop-up menu similar to this:
+  <br><br>
+  <img src="static/images/bld_menu.png" alt="Batch Link Download popup">
+  <br><br>
+  Simply check the files you want to download, then click the green "Start Download" button.
+  </div>
+{% endblock %}

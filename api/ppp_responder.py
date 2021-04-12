@@ -5,7 +5,9 @@
 from datetime import datetime, timedelta
 import inspect
 import os
+import sys
 from time import time
+import traceback
 from flask import (Flask, g, render_template, request,
                    send_file, jsonify)
 from flask.json import JSONEncoder
@@ -65,7 +67,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.1'
+__version__ = '0.1.3'
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
@@ -231,7 +233,7 @@ def generate_navbar(active):
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
     '''
-    for heading in ['Search']:
+    for heading in ['Search', 'Instructions']:
         nav += '<li class="nav-item active">' if heading == active else '<li class="nav-item">'
         link = ('/' + heading[:-1] + 'list').lower()
         link = ('/' + heading).lower()
@@ -260,7 +262,7 @@ def download(body):
     dtype = 'pdf' if 'pdf' in body else 'spreadsheet'
     filepath = BODIES[bodyid][dtype]
     try:
-        return send_file(filepath)
+        return send_file(filepath, as_attachment=True)
     except Exception as err:
         return render_template('error.html', urlroot=request.url_root,
                                title='Download error', message=err)
@@ -269,36 +271,33 @@ def download(body):
 @app.route('/')
 @app.route('/search')
 def show_search_form():
-    ''' Show the search form
+    '''
+    Search form
+    Show the search form.
+    ---
+    tags:
+      - Search
+    responses:
+      200:
+          description: Search form
+      500:
+          description: Error
     '''
     return render_template('search.html', urlroot=request.url_root,
-                           navbar=generate_navbar('Home'))
+                           navbar=generate_navbar('Search'))
 
 
 @app.route('/run_search', methods=['OPTIONS', 'POST'])
 def run_search():
     '''
-    Search tasks
-    Search tasks by key text.
+    Search body IDs
+    Search body IDs.
     ---
     tags:
-      - Task
-    parameters:
-      - in: query
-        name: key_type
-        schema:
-          type: string
-        required: true
-        description: key type (display term)
-      - in: query
-        name: key_text
-        schema:
-          type: string
-        required: true
-        description: key text
+      - Search
     responses:
       200:
-          description: Task table
+          description: Body ID table
       500:
           description: Error
     '''
@@ -327,6 +326,14 @@ def run_search():
     return generate_response(result)
 
 
+@app.route('/instructions')
+def show_instructions_form():
+    ''' Show the instructions form
+    '''
+    return render_template('instructions.html', urlroot=request.url_root,
+                           navbar=generate_navbar('Instructions'))
+
+
 # *****************************************************************************
 # * Endpoints                                                                 *
 # *****************************************************************************
@@ -351,29 +358,35 @@ def get_doc_json():
     '''
     swag = swagger(app)
     swag['info']['version'] = __version__
-    swag['info']['title'] = "Assignment Responder"
+    swag['info']['title'] = "PatchPerPix Match"
     return jsonify(swag)
 
-@app.route("/ping")
-def pingdb():
+@app.route("/stats")
+def stats():
     '''
-    Ping the database connection
-    Ping the database connection and reconnect if needed
+    Show stats
+    Show uptime/requests statistics
     ---
     tags:
-      - Diagnostics
+      - Configuration
     responses:
       200:
-          description: Ping successful
+          description: Stats
       400:
-          description: Ping unsuccessful
+          description: Stats could not be calculated
     '''
     result = initialize_result()
     try:
-        g.db.ping()
-    except Exception as err:
-        raise InvalidUsage(err)
-    return generate_response(result)
+        result['stats'] = {"version": __version__,
+                           "python": sys.version,
+                           "pid": os.getpid()}
+        return generate_response(result)
+    except Exception as ex:
+        template = "An exception of type {0} occurred. Arguments:{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        traceback.print_tb(ex.__traceback__)
+        print(result)
+        raise InvalidUsage('Error: %s' % (message,))
 
 
 # *****************************************************************************
