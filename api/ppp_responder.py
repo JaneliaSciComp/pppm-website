@@ -67,7 +67,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
@@ -330,8 +330,12 @@ def run_search():
 def show_instructions_form():
     ''' Show the instructions form
     '''
+    rfile = open(app.config['README'], "r")
+    readme = rfile.read()
+    rfile.close()
     return render_template('instructions.html', urlroot=request.url_root,
-                           navbar=generate_navbar('Instructions'))
+                           navbar=generate_navbar('Instructions'),
+                           readme=readme)
 
 
 # *****************************************************************************

@@ -28,6 +28,15 @@ table.standard {
   border-radius: 50%;
 }
 
+div.scroll {
+  height: 200px;
+  width: 90%;
+  overflow: scroll;
+  border: 1px solid #666;
+  background-color: #ccc;
+  padding: 8px;
+}
+
 /* Bootstrap */
 .btn-tiny {
     padding: 2px 2px;
