@@ -67,7 +67,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
@@ -244,6 +244,11 @@ def generate_navbar(active):
 
 
 def dlink(text, dtype):
+    if dtype == 'pdf':
+        url = BODIES[text][dtype].replace('/nrs/kainmueller/PatchPerPixMatch',
+                                          'https://filetransfer.mdc-berlin.de/'
+                                          + '?u=pppm&p=4646sdfzifmFR28_ww446&path=')
+        return "<a href='%s'>%s</a>" % (url, 'Download pdf')
     return "<a href='%s'>%s</a>" % ('download/' + os.path.basename(BODIES[text][dtype]),
                                     'Download ' + dtype)
 
