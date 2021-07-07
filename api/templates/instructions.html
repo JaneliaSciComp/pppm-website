@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block script %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script>
 </script>
 {% endblock %}
@@ -9,23 +8,81 @@
   {{navbar|safe}}
   <h2>Instructions</h2>
   <br>
-  <div>
+  <div style="margin-left: 5px;">
+
   <h4>Summary</h4>
-  This application allows the user to search the catalog of body IDs and return match information in two forms:
+  This application allows the user to search the catalog of hemibrain body IDs and return MCFO match information in two forms:
   <ul>
     <li>PDF files containing match imagery, ranks, and scores</li>
     <li>Excel spreadsheets containing stock name, slide code, and rank</li>
   </ul>
+
   <h4>Data</h4>
-  The README file descibing the data and methods follows:
-  <pre><div class="scroll">{{readme}}</div></pre>
+  We provide PatchPerPixMatch search results for ~30,000 target neuron morphologies from the hemibrain <a href="#ref1">[1]</a> version 1.2 (available at <a href="https://neuprint.janelia.org" target="_blank">https://neuprint.janelia.org</a>) vs ~20,000 MCFO brain acquisitions of sparse and medium dense GAL4 lines (Gen1 MCFO Phase 1 Categories 2 and 3 as published with <a href="#ref2">[2]</a>, available at <a href="https://gen1mcfo.janelia.org" target="_blank">https://gen1mcfo.janelia.org</a>, registered to the JRC2018 Unisex template <a href="#ref3">[3]</a>).
+  <br>
+  For each of ~30,000 hemibrain body IDs, there is a PDF and a spreadsheet (xlsx) showing the best matching MCFO samples.
+  <br><br>
+
+  <div style="margin-left: 50px;">
+  <h5>Content of the PDFs</h5>
+  <a href="static/images/pdf_output.jpg" target="_blank"><img src="static/images/pdf_output.jpg" alt="PDF" width="1024px"></a>
+  <ul>
+  <li>Top left image: Maximum intensity projection (MIP) of the MCFO sample; all three neuron signal channels).</li>
+  <li>Mid left image: Color-depth MIP of best-matching channel (i.e. projection image with depth encoded as color, as employed in <a href="#ref4">[4]</a>). The channel color is indicated in the top left corner of the image. Color depth encoding is specified in the top right corner of the image.</li>
+  <li>Bottom left image: Color MIP of best-matching channel, dimmed and overlaid with color-depth projection of target neuron morphology.</li>
+  <li>Top right panel: hemibrain ID of the target neuron, line name and sample ID of the MCFO sample, PatchPerPixMatch rank and score, as well as a MIP of the full expression pattern of the GAL4 line (to get a sense of the respective density).</li>
+  <li>Mid right image: MIP of the MCFO sample masked by best-matching PatchPerPix <a href="#ref5">[5]</a> fragments.</li>
+  <li>Bottom right image: MIP of the MCFO sample masked by best-matching PatchPerPix fragments (sometimes pruned), overlaid with target neuron morphology in purple.</li>
+  </ul>
+  Matches are sorted by PatchPerPixMatch ranks. Samples of the same line are sorted in directly behind the best match of a line.
+  <br><br>
+
+  <h5>Content of the spreadsheets</h5>
+  Spreadsheets are provided to facilitate annotation efforts. 
+  Each row contains line name, slide code, and PatchPerPixMatch rank of a match as contained in the PDF, sorted by rank.
+  <br><br>
+
+  <h5>Which hemibrain body IDs are included</h5>
+  A list of ~30,000 hemibrain version 1.2 body IDs selected from neuprint (<a href="https://neuprint.janelia.org" target="_blank">https://neuprint.janelia.org</a>) by Hideo Otsuna by means of neuprint neuron quality tags, size, etc. For the same list of body IDs, Color depth MIP mask search results are published on NeuronBridge (<a href="https://neuronbridge.janelia.org" target="_blank">https://neuronbridge.janelia.org</a>).
+  <br><br>
+
+  <h5>Which MCFO samples are included</h5>
+  ~20,000 MCFO brain samples of sparse and medium dense Generation 1 lines (Gen1 MCFO Phase 1 Categories 2 and 3 as published with <a href="#ref2">[2]</a>, available at <a href="https://gen1mcfo.janelia.org" target="_blank">https://gen1mcfo.janelia.org</a>).
+  <br><br>
+
+ <h5>How the PatchPerPixMatch results were generated</h5>
+ <ul>
+ <li>PatchPerPix segmentations of the MCFO samples: <a href="https://github.com/Kainmueller-Lab/PatchPerPix_experiments" target="_blank">https://github.com/Kainmueller-Lab/PatchPerPix_experiments</a></li>
+ <li>PatchPerPixMatch search results: <a href="https://github.com/Kainmueller-Lab/PatchPerPixMatch" target="_blank">https://github.com/Kainmueller-Lab/PatchPerPixMatch</a></li>
+ </ul>
+ </div>
+
   <h4>Downloading files</h4>
   After a search, a table will show body ID and neuron name, and provide links to the PDF file and spreadsheet. To download a PDF file or spreadsheet, just click on the link.
   <br>
-  If you're using Chrome and want to download files in batch, we recommend <a href="https://chrome.google.com/webstore/detail/batch-link-downloader/aiahkbnnpafepcgnhhecilboebmmolnn?hl=en-US" target="_blank">Batch Link Downloader</a>. Once you have it installed, any time you're on a page with links, you can set up for batch download by clicking on the Batch Link Download icon in your Chrome menu <img src="static/images/bld.png" alt="Batch Licn Download icon" style="width:25px;height:25px;">. You'll see a pop-up menu similar to this:
+  If you're using Chrome and want to download files in batch, we recommend <a href="https://chrome.google.com/webstore/detail/batch-link-downloader/aiahkbnnpafepcgnhhecilboebmmolnn?hl=en-US" target="_blank">Batch Link Downloader</a>. Once you have it installed, any time you're on a page with links, you can set up for batch download by clicking on the Batch Link Download icon in your Chrome menu <img src="static/images/bld.png" alt="Batch Link Download icon" style="width:25px;height:25px;">. You'll see a pop-up menu similar to this:
   <br><br>
   <img src="static/images/bld_menu.png" alt="Batch Link Download popup">
   <br><br>
   Simply check the files you want to download, then click the green "Start Download" button.
+  <br><br>
+  If you have any questions, please contact <a href="mailto:lisa.mais@mdc-berlin.de">lisa.mais@mdc-berlin.de</a> or <a href="kainmuellerd@janelia.hhmi.org">kainmuellerd@janelia.hhmi.org</a>.
   </div>
+  <br><br>
+
+  <h4>References</h4>
+  <div id="ref1"></div>
+  [1] Scheffer, L. K., Xu, C. S., Januszewski, M., Lu, Z., Takemura, S., Hayworth, K. J., Huang, G. B., Shinomiya, K., Maitlin-Shepard, J., Berg, S., Clements, J., Hubbard, P. M., Katz, W. T., Umayam, L., Zhao, T., Ackerman, D., Blakely, T., Bogovic, J., Dolafi, T., Kainmueller, D., Kawase, T., Khairy, K. A., Leavitt, L., Li, P. H., Lindsey, L., Neubarth, N., Olbris, D. J., Otsuna, H., Trautman, E. T., Ito, M., Bates, A. S., Goldammer, J., Wolff, T., Svirskas, R., Schlegel, P., Neace, E., Knecht, C. J., Alvarado, C. X., Bailey, D. A., Ballinger, S., Borycz, J. A., Canino, B. S., Cheatham, N., Cook, M., Dreher, M., Duclos, O., Eubanks, B., Fairbanks, K., Finley, S., Forknall, N., Francis, A., Hopkins, G. P., Joyce, E. M., Kim, S., Kirk, N. A., Kovalyak, J., Lauchie, S. A., Lohff, A., Maldonado, C., Manley, E. A., McLin, S., Mooney, C., Ndama, M., Ogundeyi, O., Okeoma, N., Ordish, C., Padilla, N., Patrick, C. M., Paterson, T., Phillips, E. E., Phillips, E. M., Rampally, N., Ribeiro, C., Robertson, M. K., Rymer, J. T., Ryan, S. M., Sammons, M., Scott, A. K., Scott, A. L., Shinomiya, A., Smith, C., Smith, K., Smith, N. L., Sobeski, M. A., Suleiman, A., Swift, J., Takemura, S., Talebi, I., Tarnogorska, D., Tenshaw, E., Tokhi, T., Walsh, J. J., Yang, T., Horne, J. A., Li, F., Parekh, R., Rivlin, P. K., Jayaraman, V., Costa, M., Jefferis, G. S., Ito, K., Saalfeld, S., George, R., Meinertzhagen, I. A., Rubin, G. M., Hess, H. F., Jain, V. & Plaza, S. M. A connectome and analysis of the adult Drosophila central brain. eLife. 2020; 9: elife.57443. DOI: <a href="https://doi.org/10.7554/eLife.57443" target="_blank">10.7554/eLife.57443</a>
+  <br>
+  <div id="ref2"></div>
+  [2] Meissner, G. W., Dorman, Z., Nern, A., Forster, K., Gibney, T., Jeter, J., Johnson, L., He, Y., Lee, K., Melton, B., Yarbrough, B., Clements, J., Goina, C., Otsuna, H., Rokicki, K., Svirskas, R. R., Aso, Y., Card, G. M., Dickson, B. J., Ehrhardt, E., Goldammer, J., Ito, M., Korff, W., Minegishi, R., Namiki, S., Rubin, G. M., Sterne, G., Wolff, T., Malkesman, O. & FlyLight Project Team. An image resource of subdivided Drosophila GAL4-driver expression patterns for neuron-level searches. bioRxiv. 2020: 2020.05.29.080473. DOI: <a href="https://doi.org/10.1101/2020.05.29.080473" target="_blank">10.1101/2020.05.29.080473</a>
+  <br>
+  <div id="ref3"></div>
+  [3] Bogovic, J. A., Otsuna, H., Heinrich, L., Ito, M., Jeter, J., Meissner, G., Nern, A., Colonell, J., Malkesman, O., Ito, K. & Saalfeld, S. An unbiased template of the Drosophila brain and ventral nerve cord. PLoS ONE. 2020; 15: e0236495. DOI: <a href="https://doi.org/10.1371/journal.pone.0236495" target="_blank">10.1371/journal.pone.0236495</a>
+  <br>
+  <div id="ref4"></div>
+  [4] Otsuna, H., Ito, M. & Kawase, T. Color depth MIP mask search: a new tool to expedite Split-GAL4 creation. bioRxiv. 2018: 318006. DOI: <a href="https://doi.org/10.1101/318006 " target="_blank">10.1101/318006</a>
+  <br>
+  <div id="ref5"></div>
+  [5] Mais, L., Hirsch, P., Kainmueller, D.: PatchPerPix for instance segmentation. Lecture Notes in Computer Science 12370, 288–304 (2020).
 {% endblock %}
