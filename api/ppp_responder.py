@@ -4,11 +4,12 @@
 
 from datetime import datetime, timedelta
 import inspect
+import json
 import os
 import sys
 from time import time
 import traceback
-from flask import (Flask, g, render_template, request,
+from flask import (Flask, render_template, request,
                    send_file, jsonify)
 from flask.json import JSONEncoder
 from flask_cors import CORS
@@ -17,10 +18,6 @@ import pymysql.cursors
 import pymysql.err
 import requests
 
-
-# SQL statements
-READ = {
-}
 
 CONFIG = {'config': {"url": "http://config.int.janelia.org/"}}
 
@@ -67,24 +64,11 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
-SERVER = dict()
 CORS(app, supports_credentials=True)
-#try:
-#    CONN = pymysql.connect(host=app.config['MYSQL_DATABASE_HOST'],
-#                           user=app.config['MYSQL_DATABASE_USER'],
-#                           password=app.config['MYSQL_DATABASE_PASSWORD'],
-#                           db=app.config['MYSQL_DATABASE_DB'],
-#                           cursorclass=pymysql.cursors.DictCursor)
-#    CURSOR = CONN.cursor()
-#except Exception as err:
-#    ttemplate = "An exception of type {0} occurred. Arguments:\n{1!r}"
-#    tmessage = ttemplate.format(type(err).__name__, err.args)
-#    print(tmessage)
-#    sys.exit(-1)
 START_TIME = ''
 BODIES = dict()
 
@@ -100,15 +84,20 @@ def before_request():
         If needed, initilize global variables.
     '''
     # pylint: disable=W0603
-    global START_TIME, CONFIG, SERVER, BODIES
-    #g.db = CONN
-    #g.c = CURSOR
-    if not SERVER:
+    global START_TIME, CONFIG, BODIES
+    # This try block bypasses configuration loading from the config REST service
+    try:
+        path = 'pppm_bodies.json'
+        with open(path) as handle:
+            BODIES = json.load(handle)
+    except Exception as err:
+        return render_template('error.html', urlroot=request.url_root,
+                               message='Could not read %s: %s' \
+                               % ('path', str(err)))
+    if not BODIES:
         try:
             data = call_responder('config', 'config/rest_services')
             CONFIG = data['config']
-            data = call_responder('config', 'config/servers')
-            SERVER = data['config']
             data = call_responder('config', 'config/pppm_bodies')
             BODIES = data['config']
         except Exception as err: # pragma: no cover
@@ -116,8 +105,6 @@ def before_request():
                                    message='Invalid response from %s: %s' \
                                    % ('configuration server', str(err)))
     START_TIME = time()
-    #with open('ppp_key.json') as keyfile:
-    #    BODIES = json.load(keyfile)
     if request.method == 'OPTIONS':
         result = initialize_result()
         return generate_response(result)
