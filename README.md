@@ -16,39 +16,29 @@ will use the following configurations:
 - servers
 
 The location of the configuration system is in the config.cfg file as CONFIG.
-
-To rebuild the docker container:
-```
-docker build --tag registry.int.janelia.org/janeliascicomp/pppm-website.
-docker push registry.int.janelia.org/janeliascicomp/pppm-website
-```
+If the config service is not available, provide a list of body mappings in api/pppm_bodies.json.
 
 ## Deployment
 
-After installing on the production server, set up the environment for Docker.
-Rename env_template to .env, and change any values enclosed in angle brackets.
-
-To create a new database instance:
+Clone the repo to the deployment system.
 ```
-sudo mkdir /data/mysql/
-sudo chown mysql:mysqldba /data/mysql/assignment
-docker-compose -f docker-compose-prod.yml up db
+git clone
 ```
 
-Take the following steps to start the system:
+To start the app:
 ```
-cd /opt/flask/assignment-responder
-docker-compose -f docker-compose-prod.yml down
-docker image ls
-docker image rm <image id from above for assignment-manager>
-docker volume rm assignment-manager_static_volume
-docker pull registry.int.janelia.org/flyem/assignment-manager
-docker-compose -f docker-compose-prod.yml up -d
+cd /opt/flask/pppm-website
+sh restart_production.sh
 ```
 
 ## Development
-1. Modify api/config.cfg to change MYSQL_DATABASE_HOST as needed
-2. docker-compose up -d
+
+To run without docker:
+```
+cd api
+python3 ppp_responder.py
+```
+If you don't have all of the required modules, it's recommended that you create a virtual environment and install them from requirements.txt.
 
 ## Author Information
 Written by Rob Svirskas (<svirskasr@janelia.hhmi.org>)
