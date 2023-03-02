@@ -2,7 +2,7 @@
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/JaneliaSciComp/pppm-website.svg)](https://github.com/JaneliaSciComp/pppm-website)
 [![GitHub commit merge status](https://img.shields.io/github/commit-status/badges/shields/master/5d4ab86b1b5ddfb3c4a70a70bd19932c52603b8c.svg)](https://github.com/JaneliaSciComp/pppm-website)
-[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Requirements Status](https://requires.io/github/janelia-flyem/assignment-manager/requirements.svg?branch=master)](https://requires.io/github/JaneliaSciComp/pppm-website/requirements/?branch=main)
 
 ## Summary
@@ -20,9 +20,9 @@ If the config service is not available, provide a list of body mappings in api/p
 
 ## Deployment
 
-Clone the repo to the deployment system.
+Clone the repo to the deployment system:
 ```
-git clone
+git clone https://github.com/JaneliaSciComp/pppm-website.git
 ```
 
 To start the app:
