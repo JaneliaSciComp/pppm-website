@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.11
 ADD . /api
 WORKDIR /api
 # RUN apt-get update && apt-get install -y libldap2-dev
