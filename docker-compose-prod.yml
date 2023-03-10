@@ -12,15 +12,14 @@ services:
       - /etc/nginx/ssl:/etc/nginx/ssl
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static_volume:/api/static
-      - /nrs/kainmueller/PatchPerPixMatch:/nrs/kainmueller/PatchPerPixMatch
     networks:
       - ppp-net
   app:
-    image: registry.int.janelia.org/janeliascicomp/pppm-website
+    build: ./api
     restart: unless-stopped
     volumes:
+        - ./api:/api
         - static_volume:/api/static
-        - /nrs/kainmueller/PatchPerPixMatch:/nrs/kainmueller/PatchPerPixMatch
     environment:
       - TZ=America/New_York
       - PYTHONUNBUFFERED=1
