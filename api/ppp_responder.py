@@ -232,8 +232,7 @@ def generate_navbar(active):
 
 def dlink(text, dtype):
     url = BODIES[text][dtype].replace('/nrs/kainmueller/PatchPerPixMatch',
-                                      'https://filetransfer.mdc-berlin.de/'
-                                      + '?u=pppm&p=4646sdfzifmFR28_ww446&path=')
+                                      app.config['CONTENT_HOST'])
     return "<a href='%s'>%s</a>" % (url, 'Download ' + dtype)
 
 
@@ -386,4 +385,4 @@ def stats():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=app.config['DEBUG'])
