@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+title: pppm-website
+authors:
+- family-names: Svirskas
+  given-names: Rob
+  email: SVIRSKASR@hhmi.org
+  orcid: https://orcid.org/0000-0001-8374-6008
+  affiliation: Janelia Research Campus, HHMI
+url: https://github.com/JaneliaSciComp/pppm-website
+repository-code: https://github.com/JaneliaSciComp/pppm-website.git
+license: BSD-3-Clause
+keywords: []
+abstract: PatchPerPix Match website
