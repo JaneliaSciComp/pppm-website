@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
-title: pppm-website
+title: JaneliaSciComp/pppm-website: v1.0.1
 authors:
 - family-names: Svirskas
   given-names: Rob
