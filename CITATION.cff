@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
-title: JaneliaSciComp/pppm-website: v1.0.1
+title: "JaneliaSciComp/pppm-website v1.0.0"
 authors:
 - family-names: Svirskas
   given-names: Rob
@@ -8,7 +8,7 @@ authors:
   orcid: https://orcid.org/0000-0001-8374-6008
   affiliation: Janelia Research Campus, HHMI
 version: 1.0.0
-date-released: '2025-01-12'
+date-released: "2025-01-12"
 url: https://github.com/JaneliaSciComp/pppm-website
 repository-code: https://github.com/JaneliaSciComp/pppm-website.git
 license: BSD-3-Clause
