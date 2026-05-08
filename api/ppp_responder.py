@@ -1,6 +1,9 @@
 ''' ppp_responder.py
     PatchPerPix Match REST API and site
 '''
+# PATCHED: Configurator dependency removed - pppm_bodies.json is loaded from the
+# local file baked into the image; the configurator fallback (and its `CONFIG`
+# dict, `call_responder`, and `requests` import) have been removed.
 
 from datetime import datetime, timedelta
 import inspect
@@ -16,10 +19,6 @@ from flask_cors import CORS
 from flask_swagger import swagger
 import pymysql.cursors
 import pymysql.err
-import requests
-
-
-CONFIG = {'config': {"url": "http://config.int.janelia.org/"}}
 
 # *****************************************************************************
 # * Classes                                                                   *
@@ -64,7 +63,7 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
-__version__ = '0.1.7'
+__version__ = '1.1.0'  # PATCHED: configurator dependency removed
 app = Flask(__name__, template_folder='templates')
 app.json_encoder = CustomJSONEncoder
 app.config.from_pyfile("config.cfg")
@@ -84,8 +83,7 @@ def before_request():
         If needed, initilize global variables.
     '''
     # pylint: disable=W0603
-    global START_TIME, CONFIG, BODIES
-    # This try block bypasses configuration loading from the config REST service
+    global START_TIME, BODIES
     try:
         path = 'pppm_bodies.json'
         with open(path) as handle:
@@ -94,16 +92,6 @@ def before_request():
         return render_template('error.html', urlroot=request.url_root,
                                message='Could not read %s: %s' \
                                % ('path', str(err)))
-    if not BODIES:
-        try:
-            data = call_responder('config', 'config/rest_services')
-            CONFIG = data['config']
-            data = call_responder('config', 'config/pppm_bodies')
-            BODIES = data['config']
-        except Exception as err: # pragma: no cover
-            return render_template('error.html', urlroot=request.url_root,
-                                   message='Invalid response from %s: %s' \
-                                   % ('configuration server', str(err)))
     START_TIME = time()
     if request.method == 'OPTIONS':
         result = initialize_result()
@@ -168,33 +156,6 @@ def initialize_result():
                        'row_count': 0,
                        'pid': os.getpid()}}
     return result
-
-
-def call_responder(server, endpoint, payload=''):
-    ''' Call a responder
-        Keyword arguments:
-          server: server
-          endpoint: REST endpoint
-          payload: payload for POST requests
-    '''
-    if server not in CONFIG:
-        raise Exception("Configuration key %s is not defined" % (server))
-    url = CONFIG[server]['url'] + endpoint
-    try:
-        if payload:
-            headers = {"Content-Type": "application/json"}
-            req = requests.post(url, headers=headers, json=payload)
-        else:
-            req = requests.get(url)
-    except requests.exceptions.RequestException as err: # pragma no cover
-        raise Exception(str(err))
-    try:
-        return req.json()
-    except Exception as err:
-        msg = "Bad response from %s/%s: status code=%d" \
-              % (CONFIG[server]['url'], endpoint, req.status_code)
-        print(msg)
-        raise Exception(msg)
 
 
 def generate_response(result):
